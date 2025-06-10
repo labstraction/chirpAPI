@@ -1,5 +1,8 @@
 using chirpAPI.model;
+using chirpAPI.Services.Services;
+using chirpAPI.Services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace chirpAPI
 {
@@ -9,11 +12,17 @@ namespace chirpAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            Log.Logger = new LoggerConfiguration()
+                                .ReadFrom.Configuration(builder.Configuration)
+                                .CreateLogger();
+
             // Add services to the container.
             builder.Services.AddDbContext<CinguettioContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
             builder.Services.AddControllers();
+
+            builder.Services.AddScoped<IChirpsService, PippoChirpsService>();
 
             //builder.Services.AddCors(options =>
             //{
@@ -29,7 +38,7 @@ namespace chirpAPI
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             //app.UseCors("AllowAllOrigins");
 
