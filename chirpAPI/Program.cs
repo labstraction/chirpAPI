@@ -16,13 +16,15 @@ namespace chirpAPI
                                 .ReadFrom.Configuration(builder.Configuration)
                                 .CreateLogger();
 
+            builder.Host.UseSerilog();
+
             // Add services to the container.
             builder.Services.AddDbContext<CinguettioContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
             builder.Services.AddControllers();
 
-            builder.Services.AddScoped<IChirpsService, PippoChirpsService>();
+            builder.Services.AddScoped<IChirpsService, VasylChirpsService>();
 
             //builder.Services.AddCors(options =>
             //{
