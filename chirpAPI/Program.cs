@@ -2,6 +2,8 @@ using chirpAPI.model;
 using chirpAPI.Services.Services;
 using chirpAPI.Services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 using Serilog;
 
 namespace chirpAPI
@@ -17,6 +19,18 @@ namespace chirpAPI
                                 .CreateLogger();
 
             builder.Host.UseSerilog();
+
+
+            builder.Services.AddSwaggerGen(options =>             
+            {
+                options.SwaggerDoc("v3", new OpenApiInfo
+                {
+                    Title = "Cinguettio API",
+                    Version = "v3",
+                    Description = "API for Cinguettio, a social media platform for sharing chirps."
+                });
+            });
+
 
             // Add services to the container.
             builder.Services.AddDbContext<CinguettioContext>(options =>
@@ -35,6 +49,15 @@ namespace chirpAPI
             //});
 
             var app = builder.Build();
+
+            app.UseSwagger(c =>
+            {
+                c.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0;
+            });
+            app.UseSwaggerUI(c =>
+            {   
+                c.SwaggerEndpoint("v3/swagger.json", "Cinguettio API V1");
+            }); 
 
             // Configure the HTTP request pipeline.
 

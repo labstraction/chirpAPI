@@ -5,20 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chirpAPI.Services.ViewModels
+namespace chirpAPI.Services.Model.DTOs
 {
-    public class ChirpViewModel
+    public class ChirpCreateDTO
     {
-        public int Id { get; set; }
-
-        public string Text { get; set; }
+        public string Text { get; set; } = null!;
 
         public string? ExtUrl { get; set; }
 
         public double? Lat { get; set; }
 
         public double? Lng { get; set; }
-
-        public DateTime CreationTime { get; set; }
     }
 }
