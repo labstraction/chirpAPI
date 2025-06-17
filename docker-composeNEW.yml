@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+  
+  chirpapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chirpapi
+    #hostname: "chirpapi"
+    #user: "2002:2002"
+    #depends_on:
+      #- db
+    #environment:
+      #- ASPNETCORE_ENVIRONMENT=Development
+      #- ConnectionStrings__Default=Host=postgresdb;Port=5432;Database=mydatabase;Username=myuser;Password=mypassword
+    env_file:
+      - "C:\\Users\\Allievo\\Desktop\\corso fullstack\\dev.env"
+    volumes:
+      - type: bind
+        source: C:\Users\Allievo\Desktop\corso fullstack\appsettings.json
+        target: /app/appsettings.json
+    ports:
+      - "5000:8080"
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  pgadmin_data:
+
+  
