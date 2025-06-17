@@ -1,28 +1,39 @@
-version: '3.8'
-
 services:
 
   postgresdb:
     image: postgres:16
-    container_name: postgres_db
-    restart: always
+    container_name: postgresdb
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: mydatabase
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
 
-  chirpAPi:
+  chirpapi:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: dotnet_app
-    depends_on:
-      - db
-    environment:
-      - ConnectionStrings__Default=Host=db;Port=5432;Database=mydatabase;Username=myuser;Password=mypassword
+    container_name: chirpapi
+    hostname: "chirpapi"
+    #user: "2002:2002"
+    #depends_on:
+      #- db
+    #environment:
+      #- ASPNETCORE_ENVIRONMENT=Development
+      #- ConnectionStrings__Default=Host=postgresdb;Port=5432;Database=mydatabase;Username=myuser;Password=mypassword
+    env_file:
+      - "C:\Users\Allievo\Desktop\corso fullstack\dev.env"
+    volumes:
+      - type: bind
+         source: C:\Users\Allievo\Desktop\corso fullstack\appsettings.json
+         target: /app/appsettings.json
     ports:
-      - "5000:80"
+      - "5000:8080"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
